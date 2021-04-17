@@ -1,0 +1,17 @@
+version: '2.4'
+services:
+  plex:
+    container_name: plex
+    image: plexinc/pms-docker:plexpass
+    restart: unless-stopped
+    environment:
+      - TZ=America/Los_Angeles
+      - PLEX_UID=1000
+      - PLEX_GID=1000
+    hostname: plex
+    volumes:
+      - /x/.config/plex/config:/config
+      - /x/.config/plex/transcode:/transcode
+      - /z:/z
+    network_mode: host
+

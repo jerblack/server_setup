@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+    vpn:
+      build:
+        context: ./
+        dockerfile: Dockerfile
+      image: vpn
+      container_name: vpn
+      hostname: island
+      cap_add:
+        - NET_ADMIN
+      restart: unless-stopped
+      privileged: true
+      network_mode: "bridge"
+
+      

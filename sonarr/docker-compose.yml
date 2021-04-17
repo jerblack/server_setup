@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  sonarr:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        TZ: US/Pacific
+        USER: jeremy
+    image: sonarr
+    container_name: sonarr
+    network_mode: "container:vpn"
+    volumes:
+      - /x:/x
+      - /z:/z
+      - /x/.config/sonarr:/home/jeremy/.config/sonarr

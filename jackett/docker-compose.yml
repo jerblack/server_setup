@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  jackett_priv:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        TZ: US/Pacific
+        USER: jeremy
+    image: jackett
+    container_name: jackett_priv
+    network_mode: "container:vpn"
+    environment: 
+      - DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
+    volumes:
+      - /x:/x
+      - /x/.config/jackett_priv:/home/jeremy/.config
+  jackett_pub:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        TZ: US/Pacific
+        USER: jeremy
+    image: jackett
+    container_name: jackett_pub
+    network_mode: "container:vpn"
+    environment: 
+      - DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
+    volumes:
+      - /x:/x
+      - /x/.config/jackett_pub:/home/jeremy/.config

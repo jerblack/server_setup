@@ -1,0 +1,19 @@
+# /lib/systemd/system/plex.service
+# systemctl enable plex.service
+
+[Unit]
+Description=plex
+Requires=docker.service
+After=docker.service
+
+[Service]
+WorkingDirectory=/x/.config/docker/plex
+ExecStart=/usr/bin/docker-compose up
+ExecStop=/usr/bin/docker-compose down
+TimeoutStartSec=0
+Restart=on-failure
+StartLimitIntervalSec=60
+StartLimitBurst=3
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,63 @@
+VPN container uses static IP and service stack uses buildkit. 
+In order to support this, do the following:
+
+
+-- install docker && docker-compose
+    # https://docs.docker.com/engine/install/debian/
+    apt-get install apt-transport-https ca-certificates curl gnupg lsb-release
+    curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    apt update
+    apt-get install docker-ce docker-ce-cli containerd.io 
+    sudo usermod -aG docker jeremy
+    # logout for group changes to take effect
+    curl -s https://api.github.com/repos/docker/compose/releases/latest | grep -wo -m 1 "https.*docker-compose-Linux-x86_64" | wget -qi - 
+    chmod +x docker-compose-Linux-x86_64 && mv docker-compose-Linux-x86_64 /usr/bin/docker-compose
+
+
+-- static ip, create bridge for containers
+    # https://wiki.debian.org/NetworkConfiguration
+    
+    apt install bridge-utils
+    brctl addbr br0
+    brctl addif br0 eno2
+
+    /etc/network/interfaces
+        auto lo
+        iface lo inet loopback
+
+        allow-hotplug eno1
+        auto eno1
+        iface eno1 inet static
+            address 192.168.0.5/24
+            gateway 192.168.0.1
+            dns-nameservers 192.168.0.1
+
+        allow-hotplug eno2
+        auto eno2
+        iface eno2 inet manual
+
+        auto br0
+        iface br0 inet static
+            address 192.168.0.100/24
+            bridge_ports eno2
+            bridge_stp off
+            bridge_fd 0
+            bridge_waitport 0
+
+    systemctl restart networking
+
+-- modify docker daemon to enable static ip and route modification in containers
+    systemctl edit docker.service
+
+    [Service]
+    ExecStart=
+    ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock --bridge=br0 --ip-masq=false --iptables=false --fixed-cidr=192.168.0.112/28 --dns=192.168.0.1 --default-gateway=192.168.0.1
+    ExecStartPost=/usr/sbin/sysctl net.ipv4.conf.all.forwarding=1
+    ExecStartPost=/usr/sbin/iptables -P FORWARD ACCEPT
+
+    systemctl daemon-reload
+
+-- enable buildkit and move data folder for docker
+    /etc/docker/daemon.json
+        { "data-root": "/x/.docker", "features": { "buildkit": true } }
