@@ -143,4 +143,16 @@ services:
       - /x:/x
       - /z:/z
       - /x/.config/sonarr:/home/jeremy/.config/sonarr
-
+  tautulli:
+    build:
+      context: ./tautulli/
+      dockerfile: Dockerfile
+      args:
+        TZ: US/Pacific
+        USER: jeremy
+    image: tautulli
+    container_name: tautulli
+    restart: unless-stopped
+    network_mode: "service:vpn"
+    volumes:
+      - /x/.config/tautulli:/config

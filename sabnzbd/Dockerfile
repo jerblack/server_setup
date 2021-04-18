@@ -38,8 +38,9 @@ COPY --from=mux /go/mux/mux /usr/bin/mux
 COPY --from=extract /go/extract/extract /usr/bin/extract
 RUN --mount=type=cache,target=/root/.cache/  \
     apk upgrade --update && \
-    apk add --update --no-cache alpine-conf unrar unzip sudo python3 python3-dev rust cargo libffi-dev libressl-dev curl wget ffmpeg mkvtoolnix file  && \
-    curl -s https://api.github.com/repos/sabnzbd/sabnzbd/releases/latest | grep -wo "https.*src.tar.gz" | wget -qi -  && \
+    apk add --update --no-cache alpine-conf unrar unzip sudo python3 python3-dev rust cargo libffi-dev libressl-dev curl wget ffmpeg mkvtoolnix file jq  && \
+    # curl -s https://api.github.com/repos/sabnzbd/sabnzbd/releases/latest | grep -wo "https.*src.tar.gz" | wget -qi -  && \
+    curl -s https://api.github.com/repos/sabnzbd/sabnzbd/releases/latest | jq '.assets[] | select(.content_type=="application/x-tar").browser_download_url' | wget -qi -  && \
     python3 -m ensurepip  && \
     pip3 install --upgrade pip setuptools wheel && \
     mkdir /sabnzbd && \

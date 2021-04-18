@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  tautulli:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        TZ: US/Pacific
+        USER: jeremy
+    image: tautulli
+    container_name: tautulli
+    restart: unless-stopped
+    network_mode: "container:vpn"
+    volumes:
+      - /x/.config/tautulli:/config
