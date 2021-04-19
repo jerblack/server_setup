@@ -156,3 +156,19 @@ services:
     network_mode: "service:vpn"
     volumes:
       - /x/.config/tautulli:/config
+  # # not using radarr
+  # # they are way too opinionated about my media setup
+  # radarr:
+  #   build:
+  #     context: ./radarr/
+  #     dockerfile: Dockerfile
+  #     args:
+  #       TZ: US/Pacific
+  #       USER: jeremy
+  #   image: radarr
+  #   container_name: radarr
+  #   network_mode: "service:vpn"
+  #   volumes:
+  #     - /x:/x
+  #     - /z:/z
+  #     - /x/.config/radarr:/home/jeremy/.config/radarr
