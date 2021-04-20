@@ -31,7 +31,10 @@ COPY --from=extract /go/extract/extract /usr/bin/extract
 COPY --from=hydra /go/hydra/hydra /usr/bin/hydra
 RUN apk upgrade --update && \
     apk add --no-cache unrar unzip sudo ffmpeg mkvtoolnix file alpine-conf && \
-    setup-timezone -z ${TZ} && apk del alpine-conf && rm -rf /var/cache/apk/* && \
-    adduser ${USER} -D && echo "${USER} ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+    setup-timezone -z ${TZ} && \
+    apk del alpine-conf && \
+    rm -rf /var/cache/apk/* && \
+    adduser ${USER} -D && \
+    echo "${USER} ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 USER ${USER}
 CMD ["hydra"]
