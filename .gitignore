@@ -1,3 +1,6 @@
 .notes
 .secrets/include
+.secrets/etc/wireguard/*conf
+.secrets/*conf
+.secrets/*gz
 test

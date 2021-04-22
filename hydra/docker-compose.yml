@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.9'
 services:
   hydra:
     build:
@@ -11,6 +11,13 @@ services:
     container_name: hydra
     restart: unless-stopped
     network_mode: "container:vpn"
+    secrets:
+      - hydra.conf
     volumes:
       - /x:/x
       - /z:/z
+
+secrets:
+  hydra.conf:
+    file: "../.secrets/hydra.conf"
+      

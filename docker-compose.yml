@@ -1,7 +1,7 @@
 # prereq 
 # docker build -t secrets .secrets
 
-version: '3.8'
+version: '3.9'
 services:
   vpn:
     build:
@@ -15,6 +15,10 @@ services:
     cap_add:
       - NET_ADMIN
     restart: unless-stopped
+    secrets:
+      - dnsup.conf
+      - connected.conf
+      - wg.tar.gz
     privileged: true
     network_mode: "bridge"
   deluge_pub:
@@ -119,10 +123,13 @@ services:
     container_name: hydra
     restart: unless-stopped
     network_mode: "service:vpn"
+    secrets:
+      - hydra.conf
     depends_on: 
       - deluge_pub
       - deluge_tl
-      - deluge_ipt  
+      - deluge_ipt
+      - sonarr  
     volumes:
       - /x:/x
       - /z:/z
@@ -156,19 +163,14 @@ services:
     network_mode: "service:vpn"
     volumes:
       - /x/.config/tautulli:/config
-  # # not using radarr
-  # # they are way too opinionated about my media setup
-  # radarr:
-  #   build:
-  #     context: ./radarr/
-  #     dockerfile: Dockerfile
-  #     args:
-  #       TZ: US/Pacific
-  #       USER: jeremy
-  #   image: radarr
-  #   container_name: radarr
-  #   network_mode: "service:vpn"
-  #   volumes:
-  #     - /x:/x
-  #     - /z:/z
-  #     - /x/.config/radarr:/home/jeremy/.config/radarr
+
+      
+secrets:
+  dnsup.conf:
+    file: ".secrets/dnsup.conf"
+  connected.conf:
+    file: ".secrets/connected.conf"
+  wg.tar.gz:
+    file: ".secrets/wg.tar.gz"
+  hydra.conf:
+    file: ".secrets/hydra.conf"

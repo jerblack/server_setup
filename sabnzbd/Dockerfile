@@ -13,19 +13,12 @@ RUN apk add --update libffi-dev libressl-dev git automake make bash autoconf alp
     tar -cvf /par.tar /usr/lib/libgcc_s.so.1 /usr/lib/libgomp.so.1 /usr/lib/libgomp.so.1.0.0 \
     /usr/lib/libgomp.so /usr/lib/libstdc++.so.6 /usr/lib/libstdc++.so /usr/lib/libstdc++.so.6.0.28 /usr/local/bin/par2
 
-FROM golang:alpine as mux
-ENV CGO_ENABLED=0
-RUN apk add --no-cache subversion && \
-    svn export https://github.com/jerblack/server_tools/trunk/mux && \
-    cd mux && \
-    go build -ldflags="-s -w"
-
-FROM golang:alpine as extract
-ENV CGO_ENABLED=0
-RUN apk add --no-cache subversion && \
-    svn export https://github.com/jerblack/server_tools/trunk/extract && \
-    cd extract && \
-    go build -ldflags="-s -w"
+FROM golang:alpine as build
+ENV GOPROXY=direct
+RUN apk add --no-cache git && \
+    go get github.com/jerblack/server_tools/mux && \
+    go get github.com/jerblack/server_tools/extract && \
+    go get github.com/jerblack/server_tools/hydra
 
 FROM alpine
 ARG TZ
@@ -33,9 +26,8 @@ ARG USER
 ARG SERVER_PORT
 ENV SERVER_PORT ${SERVER_PORT}
 WORKDIR /config/
+COPY --from=build /go/bin/ /usr/bin/
 COPY --from=par /par.tar .
-COPY --from=mux /go/mux/mux /usr/bin/mux
-COPY --from=extract /go/extract/extract /usr/bin/extract
 RUN --mount=type=cache,target=/root/.cache/  \
     apk upgrade --update && \
     apk add --update --no-cache alpine-conf unrar unzip sudo python3 python3-dev rust cargo libffi-dev libressl-dev curl wget ffmpeg mkvtoolnix file jq  && \
