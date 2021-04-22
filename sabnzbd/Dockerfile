@@ -17,9 +17,8 @@ FROM golang:alpine as build
 ENV GOPROXY=direct
 RUN apk add --no-cache git && \
     go get github.com/jerblack/server_tools/mux && \
-    go get github.com/jerblack/server_tools/extract && \
-    go get github.com/jerblack/server_tools/hydra
-
+    go get github.com/jerblack/server_tools/extract 
+    
 FROM alpine
 ARG TZ
 ARG USER
@@ -31,7 +30,6 @@ COPY --from=par /par.tar .
 RUN --mount=type=cache,target=/root/.cache/  \
     apk upgrade --update && \
     apk add --update --no-cache alpine-conf unrar unzip sudo python3 python3-dev rust cargo libffi-dev libressl-dev curl wget ffmpeg mkvtoolnix file jq  && \
-    # curl -s https://api.github.com/repos/sabnzbd/sabnzbd/releases/latest | grep -wo "https.*src.tar.gz" | wget -qi -  && \
     curl -s https://api.github.com/repos/sabnzbd/sabnzbd/releases/latest | jq '.assets[] | select(.content_type=="application/x-tar").browser_download_url' | wget -qi -  && \
     python3 -m ensurepip  && \
     pip3 install --upgrade pip setuptools wheel && \
