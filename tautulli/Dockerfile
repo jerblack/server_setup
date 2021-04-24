@@ -18,9 +18,5 @@ RUN \
   rm /tautulli.tar.gz && \
   apk del curl jq alpine-conf && \
   rm -rf /var/cache/apk/*
-
-
 USER ${USER}
 CMD [ "python3", "tautulli/Tautulli.py", "--datadir", "/config" ]
-HEALTHCHECK --start-period=90s CMD curl -ILfSs http://localhost:8181/status > /dev/null || curl -ILfkSs https://localhost:8181/status > /dev/null || exit 1
-

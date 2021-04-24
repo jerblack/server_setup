@@ -1,13 +1,13 @@
-# /lib/systemd/system/sonarr.service
-# systemctl enable sonarr.service
+# /lib/systemd/system/hydra.service
+# systemctl enable hydra.service
 
 [Unit]
-Description=sonarr docker container
+Description=hydra docker container
 Requires=docker.service island.service
-After=docker.service island.service
+After=docker.service island.service sonarr.service
 
 [Service]
-WorkingDirectory=/x/.config/docker/sonarr
+WorkingDirectory=/x/.config/docker/hydra
 ExecStart=/usr/bin/docker-compose up
 ExecStop=/usr/bin/docker-compose down
 TimeoutStartSec=0

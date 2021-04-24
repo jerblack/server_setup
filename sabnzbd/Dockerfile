@@ -1,7 +1,8 @@
 # syntax=docker/dockerfile:1.2
 
 FROM alpine AS par
-RUN apk add --update libffi-dev libressl-dev git automake make bash autoconf alpine-sdk && \
+RUN --mount=type=cache,target=/par2cmdline \
+    apk add --update libffi-dev libressl-dev git automake make bash autoconf alpine-sdk && \
     git clone https://github.com/Parchive/par2cmdline.git  && \
     cd par2cmdline && \
     aclocal && \
@@ -15,7 +16,8 @@ RUN apk add --update libffi-dev libressl-dev git automake make bash autoconf alp
 
 FROM golang:alpine as build
 ENV GOPROXY=direct
-RUN apk add --no-cache git && \
+RUN --mount=type=cache,target=/go \
+    apk add --no-cache git && \
     go get github.com/jerblack/server_tools/mux && \
     go get github.com/jerblack/server_tools/extract 
     
@@ -29,18 +31,18 @@ COPY --from=build /go/bin/ /usr/bin/
 COPY --from=par /par.tar .
 RUN --mount=type=cache,target=/root/.cache/  \
     apk upgrade --update && \
-    apk add --update --no-cache alpine-conf unrar unzip sudo python3 python3-dev rust cargo libffi-dev libressl-dev curl wget ffmpeg mkvtoolnix file jq  && \
-    curl -s https://api.github.com/repos/sabnzbd/sabnzbd/releases/latest | jq '.assets[] | select(.content_type=="application/x-tar").browser_download_url' | wget -qi -  && \
+    apk add --update --no-cache alpine-conf unrar unzip python3 python3-dev rust cargo libffi-dev libressl-dev curl ffmpeg mkvtoolnix file jq  && \
+    curl -s https://api.github.com/repos/sabnzbd/sabnzbd/releases/latest | jq '.assets[] | select(.content_type=="application/x-tar").browser_download_url' | xargs curl -Lo sab.tar.gz && \
     python3 -m ensurepip  && \
     pip3 install --upgrade pip setuptools wheel && \
     mkdir /sabnzbd && \
-    tar -xvf SAB*src.tar.gz -C /sabnzbd --strip-components 1 && \
+    tar -xvf sab.tar.gz -C /sabnzbd --strip-components 1 && \
+    rm sab.tar.gz && \
     cd /sabnzbd && \
     python3 -m pip install -r requirements.txt -U && \
     setup-timezone -z ${TZ} && \
-    apk del python3-dev libffi-dev libressl-dev gcc rust cargo curl wget alpine-conf && \
+    apk del python3-dev libffi-dev libressl-dev gcc rust cargo curl alpine-conf && \
     adduser -D ${USER} && \
-    echo "${USER} ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
     rm -rf /var/cache/apk/* && \
     tar -xvf /config/par.tar -C / && \
     ln -sf /usr/local/bin/par2 /usr/local/bin/par2create && \

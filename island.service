@@ -1,13 +1,13 @@
-# /lib/systemd/system/sonarr.service
-# systemctl enable sonarr.service
+# /lib/systemd/system/island.service
+# systemctl enable island.service
 
 [Unit]
-Description=sonarr docker container
+Description=island docker stack
 Requires=docker.service
 After=docker.service
 
 [Service]
-WorkingDirectory=/x/.config/docker/sonarr
+WorkingDirectory=/x/.config/docker
 ExecStart=/usr/bin/docker-compose up
 ExecStop=/usr/bin/docker-compose down
 TimeoutStartSec=0

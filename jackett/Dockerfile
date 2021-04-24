@@ -11,7 +11,7 @@ RUN apt-get update && \
     tar -xvf jackett.tar.gz && \
     rm jackett.tar.gz && \
     ln -sf /usr/share/zoneinfo/${TZ} /etc/localtime && \
-    apt-get remove curl jq
+    apt-get remove -y curl jq
 WORKDIR /Jackett/
 USER ${USER}
 CMD ["./jackett_launcher.sh"]
