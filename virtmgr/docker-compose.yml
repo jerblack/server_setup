@@ -1,0 +1,18 @@
+version: '3.9'
+services:
+  virtmgr:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        TZ: US/Pacific
+        USER: jeremy
+    image: virtmgr
+    network_mode: bridge
+    container_name: virtmgr
+    environment: 
+      - DISPLAY=192.168.0.10:0
+      - GTK_THEME=Adwaita:dark
+    volumes:
+      - /x:/x
+      - /x/.config/docker/.secrets/.ssh:/home/jeremy/.ssh

@@ -1,17 +1,18 @@
-# /lib/systemd/system/sonarr.service
-# systemctl enable sonarr.service
+# /lib/systemd/system/virtmgr.service
+# systemctl enable virtmgr.service
 
 [Unit]
-Description=sonarr docker container
+Description=start virtmgr gui container
 Requires=docker.service
 After=docker.service
 
 [Service]
-WorkingDirectory=/x/.config/docker/sonarr
+Type=simple
+WorkingDirectory=/x/.config/docker/virtmgr
 ExecStart=/usr/bin/docker-compose up
 ExecStop=/usr/bin/docker-compose down
 TimeoutStartSec=0
-Restart=on-failure
+Restart=no
 StartLimitIntervalSec=60
 StartLimitBurst=3
 

@@ -1,6 +1,3 @@
-# prereq 
-# docker build -t secrets .secrets
-
 version: '3.9'
 services:
   vpn:
@@ -133,23 +130,23 @@ services:
     volumes:
       - /x:/x
       - /z:/z
-  sonarr:
-    build:
-      context: ./sonarr/
-      dockerfile: Dockerfile
-      args:
-        TZ: US/Pacific
-        USER: jeremy
-    image: sonarr
-    container_name: sonarr
-    network_mode: "service:vpn"
-    restart: unless-stopped
-    depends_on: 
-      - sabnzbd
-    volumes:
-      - /x:/x
-      - /z:/z
-      - /x/.config/sonarr:/home/jeremy/.config/sonarr
+  # sonarr: <- runs container as separate systemd service now
+  #   build:
+  #     context: ./sonarr/
+  #     dockerfile: Dockerfile
+  #     args:
+  #       TZ: US/Pacific
+  #       USER: jeremy
+  #   image: sonarr
+  #   container_name: sonarr
+  #   network_mode: "service:vpn"
+  #   restart: unless-stopped
+  #   depends_on: 
+  #     - sabnzbd
+  #   volumes:
+  #     - /x:/x
+  #     - /z:/z
+  #     - /x/.config/sonarr:/home/jeremy/.config/sonarr
   tautulli:
     build:
       context: ./tautulli/

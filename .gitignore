@@ -1,6 +1,5 @@
 .notes
-.secrets/include
+.secrets/.ssh
 .secrets/etc/wireguard/*conf
 .secrets/*conf
 .secrets/*gz
-test
