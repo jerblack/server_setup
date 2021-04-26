@@ -28,6 +28,7 @@ services:
     volumes:
       - /x/.config/deluge_ipt:/home/jeremy/.config/deluge
       - /x:/x
+      - /z/.seeds:/seeds
   deluge_tl:
     build:
       context: ./
