@@ -1,23 +1,19 @@
 # syntax=docker/dockerfile:1.2
 
 FROM alpine AS par
-RUN --mount=type=cache,target=/par2cmdline \
-    apk add --update libffi-dev libressl-dev git automake make bash autoconf alpine-sdk && \
+ENV CFLAGS="-O3 -pipe -fstack-protector-strong"
+ENV CXXFLAGS="-O3 -pipe -fstack-protector-strong"
+ENV LDFLAGS="-static"
+RUN apk add --update libffi-dev libressl-dev git automake make bash autoconf alpine-sdk && \
     git clone https://github.com/Parchive/par2cmdline.git  && \
     cd par2cmdline && \
-    aclocal && \
-    automake --add-missing && \
-    autoconf && \
+    ./automake.sh && \
     ./configure && \
-    make && \
-    make install && \
-    tar -cvf /par.tar /usr/lib/libgcc_s.so.1 /usr/lib/libgomp.so.1 /usr/lib/libgomp.so.1.0.0 \
-    /usr/lib/libgomp.so /usr/lib/libstdc++.so.6 /usr/lib/libstdc++.so /usr/lib/libstdc++.so.6.0.28 /usr/local/bin/par2
+    make
 
 FROM golang:alpine as build
 ENV GOPROXY=direct
-RUN --mount=type=cache,target=/go \
-    apk add --no-cache git && \
+RUN apk add --no-cache git && \
     go get github.com/jerblack/server_tools/mux && \
     go get github.com/jerblack/server_tools/extract 
     
@@ -28,7 +24,7 @@ ARG SERVER_PORT
 ENV SERVER_PORT ${SERVER_PORT}
 WORKDIR /config/
 COPY --from=build /go/bin/ /usr/bin/
-COPY --from=par /par.tar .
+COPY --from=par /par2cmdline/par2 /usr/bin
 RUN --mount=type=cache,target=/root/.cache/  \
     apk upgrade --update && \
     apk add --update --no-cache alpine-conf unrar unzip python3 python3-dev rust cargo libffi-dev libressl-dev curl ffmpeg mkvtoolnix file jq  && \
@@ -44,10 +40,9 @@ RUN --mount=type=cache,target=/root/.cache/  \
     apk del python3-dev libffi-dev libressl-dev gcc rust cargo curl alpine-conf && \
     adduser -D ${USER} && \
     rm -rf /var/cache/apk/* && \
-    tar -xvf /config/par.tar -C / && \
-    ln -sf /usr/local/bin/par2 /usr/local/bin/par2create && \
-    ln -sf /usr/local/bin/par2 /usr/local/bin/par2verify && \
-    ln -sf /usr/local/bin/par2 /usr/local/bin/par2repair
+    ln -sf /usr/bin/par2 /usr/bin/par2create && \
+    ln -sf /usr/bin/par2 /usr/bin/par2verify && \
+    ln -sf /usr/bin/par2 /usr/bin/par2repair
 USER ${USER}
 CMD /sabnzbd/SABnzbd.py --logging 1 --browser 0 --server 0.0.0.0:${SERVER_PORT}
 
