@@ -3,3 +3,4 @@
 .secrets/etc/wireguard/*conf
 .secrets/*conf
 .secrets/*gz
+youtube
