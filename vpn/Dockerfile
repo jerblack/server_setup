@@ -14,7 +14,8 @@ RUN apk upgrade --update && \
     apk add wireguard-tools ca-certificates tcptraceroute bind-tools alpine-conf && \
     setup-timezone -z ${TZ} && \
     apk del alpine-conf && \
-    rm -rf /var/cache/apk/*
+    rm -rf /var/cache/apk/* && \
+    echo net.ipv6.conf.all.disable_ipv6 = 1 >> /etc/sysctl.conf
 CMD ["connected"]
 
 # docker build --rm --no-cache -t vpn .
