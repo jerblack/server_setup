@@ -20,12 +20,12 @@ services:
     network_mode: "bridge"
   deluge_pub:
     build:
-      context: ./deluge/
+      context: ./deluge2/
       dockerfile: Dockerfile
       args:
         TZ: US/Pacific
         USER: jeremy
-    image: deluge
+    image: deluge2
     container_name: deluge_pub
     restart: unless-stopped
     network_mode: "service:vpn"
@@ -34,12 +34,12 @@ services:
       - /x:/x
   deluge_ipt:
     build:
-      context: ./deluge/
+      context: ./deluge2/
       dockerfile: Dockerfile
       args:
         TZ: US/Pacific
         USER: jeremy
-    image: deluge
+    image: deluge2
     container_name: deluge_ipt
     restart: unless-stopped
     network_mode: "service:vpn"
@@ -49,12 +49,12 @@ services:
       - /z/.seeds:/seeds
   deluge_tl:
     build:
-      context: ./deluge/
+      context: ./deluge2/
       dockerfile: Dockerfile
       args:
         TZ: US/Pacific
         USER: jeremy
-    image: deluge
+    image: deluge2
     container_name: deluge_tl
     restart: unless-stopped
     network_mode: "service:vpn"

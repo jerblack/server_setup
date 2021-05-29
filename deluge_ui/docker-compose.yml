@@ -1,0 +1,15 @@
+version: '3.9'
+services:
+  delugeui:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        TZ: US/Pacific
+        USER: jeremy
+    image: delugeui
+    network_mode: "container:vpn"
+    container_name: delugeui
+    volumes:
+      - /x:/x
+      - /x/.config/delugeui:/root/.config/deluge

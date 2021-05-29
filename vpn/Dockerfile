@@ -2,8 +2,7 @@
 
 FROM golang:alpine as build
 ENV GOPROXY=direct
-RUN --mount=type=cache,target=/go \
-    apk add --no-cache git && \
+RUN apk add --no-cache git && \
     go get github.com/jerblack/server_tools/dnsup && \
     go get github.com/jerblack/server_tools/connected 
 

@@ -1,0 +1,45 @@
+version: '3.9'
+services:
+  deluge_pub2:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        TZ: US/Pacific
+        USER: jeremy
+    image: deluge2
+    container_name: deluge_pub2
+    restart: unless-stopped
+    # network_mode: "container:vpn"
+    volumes:
+      # - /x/.config/deluge_pub:/home/jeremy/.config/deluge
+      - /x:/x
+  # deluge_ipt:
+  #   build:
+  #     context: ./
+  #     dockerfile: Dockerfile
+  #     args:
+  #       TZ: US/Pacific
+  #       USER: jeremy
+  #   image: deluge2 
+  #   container_name: deluge_ipt2 
+  #   restart: unless-stopped
+  #   network_mode: "container:vpn"
+  #   volumes:
+  #     # - /x/.config/deluge_ipt:/home/jeremy/.config/deluge
+  #     - /x:/x
+  #     # - /z/.seeds:/seeds
+  # deluge_tl:
+  #   build:
+  #     context: ./
+  #     dockerfile: Dockerfile
+  #     args:
+  #       TZ: US/Pacific
+  #       USER: jeremy
+  #   image: deluge2 
+  #   container_name: deluge_tl2 
+  #   restart: unless-stopped
+  #   network_mode: "container:vpn"
+  #   volumes:
+  #     # - /x/.config/deluge_tl:/home/jeremy/.config/deluge
+  #     - /x:/x

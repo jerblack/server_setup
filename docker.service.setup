@@ -61,3 +61,11 @@ In order to support this, do the following:
 -- enable buildkit and move data folder for docker
     /etc/docker/daemon.json
         { "data-root": "/x/.docker", "features": { "buildkit": true } }
+
+-- docker on zfs
+    https://docs.docker.com/storage/storagedriver/zfs-driver/
+    uses zfs storage drive instead of overlay2
+    rm -rf /var/lib/docker
+    zfs create -o mountpoint=/var/lib/docker x/.docker
+    /etc/docker/daemon.json
+      { "storage-driver": "zfs", "features": { "buildkit": true } }
