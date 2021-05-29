@@ -14,4 +14,18 @@ services:
       - /x/.config/plex/transcode:/transcode
       - /z:/z
     network_mode: host
-
+  music:
+    container_name: music
+    image: plexinc/pms-docker:plexpass
+    restart: unless-stopped
+    environment:
+      - TZ=America/Los_Angeles
+      - PLEX_UID=1000
+      - PLEX_GID=1000
+    hostname: music
+    volumes:
+      - /x/.config/music/config:/config
+      - /x/.config/music/transcode:/transcode
+      - /y:/y
+      - /z:/z
+    network_mode: bridge
