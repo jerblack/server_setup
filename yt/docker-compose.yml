@@ -1,0 +1,16 @@
+version: '3.9'
+services:
+  yt:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        TZ: US/Pacific
+        USER: jeremy
+    image: yt
+    restart: unless-stopped
+    network_mode: bridge
+    container_name: yt
+    volumes:
+      - /x:/x
+      - /z:/z

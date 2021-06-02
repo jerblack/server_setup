@@ -1,0 +1,20 @@
+# /lib/systemd/system/yt.service
+# systemctl enable yt.service
+
+[Unit]
+Description=start yt container
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=simple
+WorkingDirectory=/x/.config/docker/yt
+ExecStart=/usr/bin/docker-compose up
+ExecStop=/usr/bin/docker-compose down
+TimeoutStartSec=0
+Restart=no
+StartLimitIntervalSec=60
+StartLimitBurst=3
+
+[Install]
+WantedBy=multi-user.target
