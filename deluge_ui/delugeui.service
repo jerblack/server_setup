@@ -1,0 +1,20 @@
+# /lib/systemd/system/virtmgr.service
+# systemctl enable virtmgr.service
+
+[Unit]
+Description=start delugeui gui container
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=simple
+WorkingDirectory=/x/.config/docker/deluge_ui
+ExecStart=/usr/local/bin/docker-compose up
+ExecStop=/usr/local/bin/docker-compose down
+TimeoutStartSec=0
+Restart=no
+StartLimitIntervalSec=60
+StartLimitBurst=3
+
+[Install]
+WantedBy=multi-user.target
