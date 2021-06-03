@@ -17,7 +17,7 @@ ARG TZ
 ARG USER
 COPY --from=build /go/bin /usr/local/bin 
 RUN apk upgrade --update && \
-    apk add --update --no-cache alpine-conf curl ffmpeg python3 && \
+    apk add --update --no-cache alpine-conf curl ffmpeg python3 jq && \
     ln -sf python3 /usr/bin/python && \
     setup-timezone -z ${TZ} && \
     adduser -D ${USER} && \

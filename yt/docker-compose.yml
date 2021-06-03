@@ -8,7 +8,6 @@ services:
         TZ: US/Pacific
         USER: jeremy
     image: yt
-    restart: unless-stopped
     network_mode: bridge
     container_name: yt
     volumes:
