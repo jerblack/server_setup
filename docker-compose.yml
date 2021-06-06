@@ -12,12 +12,12 @@ services:
     cap_add:
       - NET_ADMIN
     restart: unless-stopped
-    secrets:
-      - dnsup.conf
-      - connected.conf
-      - wg.tar.gz
+    environment: 
+      - CONFIG_FOLDER=/x/.config/vpn
     privileged: true
     network_mode: "bridge"
+    volumes:
+      - /x:/x
   deluge_pub:
     build:
       context: ./deluge2/
@@ -162,13 +162,4 @@ services:
     volumes:
       - /x/.config/tautulli:/config
 
-      
-secrets:
-  dnsup.conf:
-    file: ".secrets/dnsup.conf"
-  connected.conf:
-    file: ".secrets/connected.conf"
-  wg.tar.gz:
-    file: ".secrets/wg.tar.gz"
-  hydra.conf:
-    file: ".secrets/hydra.conf"
+
