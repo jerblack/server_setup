@@ -4,7 +4,7 @@ FROM golang:alpine as build
 ENV GOPROXY=direct
 RUN apk add --no-cache git && \
     go get github.com/jerblack/server_tools/dnsup && \
-    go get github.com/jerblack/server_tools/connected 
+    go get github.com/jerblack/server_tools/connected
 
 FROM alpine
 ARG TZ

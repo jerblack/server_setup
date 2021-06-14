@@ -8,7 +8,7 @@ services:
         TZ: US/Pacific
     image: vpn
     container_name: vpn
-    hostname: island
+    hostname: vpn
     cap_add:
       - NET_ADMIN
     restart: unless-stopped
@@ -68,7 +68,7 @@ services:
       args:
         TZ: US/Pacific
         USER: jeremy
-        SERVER_PORT: 59354
+        SERVER_PORT: 57327
     image: sabnzbd
     container_name: sabnzbd
     restart: unless-stopped

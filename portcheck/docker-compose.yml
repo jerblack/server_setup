@@ -1,19 +1,18 @@
 version: '3.9'
 services:
-  hydra:
+  portcheck:
     build:
       context: ./
       dockerfile: Dockerfile
       args:
         TZ: US/Pacific
         USER: jeremy
-    image: hydra
-    container_name: hydra
-    environment: 
-      - CONFIG_FOLDER=/x/.config/hydra
+    image: portcheck
+    container_name: portcheck
     restart: unless-stopped
     network_mode: "container:vpn"
+    environment: 
+      - CONFIG_FOLDER=/x/.config/vpn
     volumes:
       - /x:/x
-      - /z:/z
      

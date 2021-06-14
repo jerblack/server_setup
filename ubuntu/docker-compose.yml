@@ -4,16 +4,11 @@ services:
       build:
         context: ./
         dockerfile: Dockerfile
-        args:
-          TZ: US/Pacific
-      image: vpn
-      container_name: vpn
-      hostname: vpn
+      image: ubuntu:latest 
+      container_name: ubuntu
+      hostname: ubu 
       cap_add:
         - NET_ADMIN
-      restart: unless-stopped
-      environment: 
-        - CONFIG_FOLDER=/x/.config/vpn
       privileged: true
       network_mode: "bridge"
       volumes:

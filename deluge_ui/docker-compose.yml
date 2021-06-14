@@ -10,6 +10,8 @@ services:
     image: delugeui
     network_mode: "container:vpn"
     container_name: delugeui
+    environment: 
+      - LIBGL_ALWAYS_INDIRECT=1
     volumes:
       - /x:/x
       - /x/.config/delugeui:/root/.config/deluge
