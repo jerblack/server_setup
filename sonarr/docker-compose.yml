@@ -9,8 +9,16 @@ services:
         USER: jeremy
     image: sonarr
     container_name: sonarr
-    network_mode: "container:vpn"
+    networks: 
+      vpnnet:
+        ipv4_address: 192.168.0.88
     volumes:
       - /x:/x
       - /z:/z
       - /x/.config/sonarr:/home/jeremy/.config/sonarr
+
+
+networks: 
+  vpnnet:
+    external: true
+    name: vpnnet

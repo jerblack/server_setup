@@ -15,7 +15,9 @@ services:
     environment: 
       - CONFIG_FOLDER=/x/.config/vpn
     privileged: true
-    network_mode: "bridge"
+    networks: 
+      vpnnet:
+        ipv4_address: 192.168.0.80
     volumes:
       - /x:/x
   deluge_pub:
@@ -28,7 +30,11 @@ services:
     image: deluge2
     container_name: deluge_pub
     restart: unless-stopped
-    network_mode: "service:vpn"
+    depends_on: 
+      - vpn 
+    networks: 
+      vpnnet:
+        ipv4_address: 192.168.0.81
     volumes:
       - /x/.config/deluge_pub:/home/jeremy/.config/deluge
       - /x:/x
@@ -42,7 +48,11 @@ services:
     image: deluge2
     container_name: deluge_ipt
     restart: unless-stopped
-    network_mode: "service:vpn"
+    depends_on: 
+      - vpn
+    networks: 
+      vpnnet:
+        ipv4_address: 192.168.0.82
     volumes:
       - /x/.config/deluge_ipt:/home/jeremy/.config/deluge
       - /x:/x
@@ -57,7 +67,11 @@ services:
     image: deluge2
     container_name: deluge_tl
     restart: unless-stopped
-    network_mode: "service:vpn"
+    depends_on: 
+      - vpn
+    networks: 
+      vpnnet:
+        ipv4_address: 192.168.0.83
     volumes:
       - /x/.config/deluge_tl:/home/jeremy/.config/deluge
       - /x:/x
@@ -68,11 +82,10 @@ services:
       args:
         TZ: US/Pacific
         USER: jeremy
-        SERVER_PORT: 57327
     image: sabnzbd
     container_name: sabnzbd
     restart: unless-stopped
-    network_mode: "service:vpn"
+    network_mode: host
     environment:
       - PYTHONIOENCODING=utf-8
     volumes:
@@ -87,8 +100,12 @@ services:
         USER: jeremy
     image: jackett
     container_name: jackett_priv
-    network_mode: "service:vpn"
+    networks: 
+      vpnnet:
+        ipv4_address: 192.168.0.84
     restart: unless-stopped
+    depends_on: 
+      - vpn
     environment: 
       - DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
     volumes:
@@ -103,51 +120,17 @@ services:
         USER: jeremy
     image: jackett
     container_name: jackett_pub
-    network_mode: "service:vpn"
+    networks: 
+      vpnnet:
+        ipv4_address: 192.168.0.85
     restart: unless-stopped
+    depends_on: 
+      - vpn
     environment: 
       - DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
     volumes:
       - /x:/x
       - /x/.config/jackett_pub:/home/jeremy/.config
-  # hydra:
-  #   build:
-  #     context: ./hydra/
-  #     dockerfile: Dockerfile
-  #     args:
-  #       TZ: US/Pacific
-  #       USER: jeremy
-  #   image: hydra
-  #   container_name: hydra
-  #   restart: unless-stopped
-  #   network_mode: "service:vpn"
-  #   secrets:
-  #     - hydra.conf
-  #   depends_on: 
-  #     - deluge_pub
-  #     - deluge_tl
-  #     - deluge_ipt
-  #     - sonarr  
-  #   volumes:
-  #     - /x:/x
-  #     - /z:/z
-  # sonarr: <- runs container as separate systemd service now
-  #   build:
-  #     context: ./sonarr/
-  #     dockerfile: Dockerfile
-  #     args:
-  #       TZ: US/Pacific
-  #       USER: jeremy
-  #   image: sonarr
-  #   container_name: sonarr
-  #   network_mode: "service:vpn"
-  #   restart: unless-stopped
-  #   depends_on: 
-  #     - sabnzbd
-  #   volumes:
-  #     - /x:/x
-  #     - /z:/z
-  #     - /x/.config/sonarr:/home/jeremy/.config/sonarr
   tautulli:
     build:
       context: ./tautulli/
@@ -158,8 +141,24 @@ services:
     image: tautulli
     container_name: tautulli
     restart: unless-stopped
-    network_mode: "service:vpn"
+    depends_on: 
+      - vpn
+    networks: 
+      vpnnet:
+        ipv4_address: 192.168.0.86
     volumes:
       - /x/.config/tautulli:/config
 
 
+
+networks: 
+  vpnnet:
+    name: vpnnet
+    driver: macvlan
+    driver_opts:
+      parent: eno2    
+    ipam: 
+      config:
+        - subnet: 192.168.0.0/24
+          gateway: 192.168.0.99
+          ip_range: 192.168.0.80/28

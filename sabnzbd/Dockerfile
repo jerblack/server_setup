@@ -20,8 +20,6 @@ RUN apk add --no-cache git && \
 FROM alpine
 ARG TZ
 ARG USER
-ARG SERVER_PORT
-ENV SERVER_PORT ${SERVER_PORT}
 WORKDIR /config/
 COPY --from=build /go/bin/ /usr/bin/
 COPY --from=par /par2cmdline/par2 /usr/bin
@@ -44,5 +42,5 @@ RUN --mount=type=cache,target=/root/.cache/  \
     ln -sf /usr/bin/par2 /usr/bin/par2verify && \
     ln -sf /usr/bin/par2 /usr/bin/par2repair
 USER ${USER}
-CMD /sabnzbd/SABnzbd.py --logging 1 --browser 0 --server 0.0.0.0:${SERVER_PORT}
+CMD /sabnzbd/SABnzbd.py --logging 1 --browser 0
 
