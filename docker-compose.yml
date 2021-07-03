@@ -1,25 +1,25 @@
 version: '3.9'
 services:
-  vpn:
-    build:
-      context: ./vpn/
-      dockerfile: Dockerfile
-      args:
-        TZ: US/Pacific
-    image: vpn
-    container_name: vpn
-    hostname: vpn
-    cap_add:
-      - NET_ADMIN
-    restart: unless-stopped
-    environment: 
-      - CONFIG_FOLDER=/x/.config/vpn
-    privileged: true
-    networks: 
-      vpnnet:
-        ipv4_address: 192.168.0.80
-    volumes:
-      - /x:/x
+  # vpn:
+  #   build:
+  #     context: ./vpn/
+  #     dockerfile: Dockerfile
+  #     args:
+  #       TZ: US/Pacific
+  #   image: vpn
+  #   container_name: vpn
+  #   hostname: vpn
+  #   cap_add:
+  #     - NET_ADMIN
+  #   restart: unless-stopped
+  #   environment: 
+  #     - CONFIG_FOLDER=/x/.config/vpn
+  #   privileged: true
+  #   networks: 
+  #     vpnnet:
+  #       ipv4_address: 192.168.0.80
+  #   volumes:
+  #     - /x:/x
   deluge_pub:
     build:
       context: ./deluge2/
@@ -30,11 +30,8 @@ services:
     image: deluge2
     container_name: deluge_pub
     restart: unless-stopped
-    depends_on: 
-      - vpn 
-    networks: 
-      vpnnet:
-        ipv4_address: 192.168.0.81
+    network_mode: bridge    
+    hostname: deluge_pub
     volumes:
       - /x/.config/deluge_pub:/home/jeremy/.config/deluge
       - /x:/x
@@ -48,11 +45,8 @@ services:
     image: deluge2
     container_name: deluge_ipt
     restart: unless-stopped
-    depends_on: 
-      - vpn
-    networks: 
-      vpnnet:
-        ipv4_address: 192.168.0.82
+    network_mode: bridge    
+    hostname: deluge_ipt
     volumes:
       - /x/.config/deluge_ipt:/home/jeremy/.config/deluge
       - /x:/x
@@ -67,11 +61,8 @@ services:
     image: deluge2
     container_name: deluge_tl
     restart: unless-stopped
-    depends_on: 
-      - vpn
-    networks: 
-      vpnnet:
-        ipv4_address: 192.168.0.83
+    network_mode: bridge    
+    hostname: deluge_tl
     volumes:
       - /x/.config/deluge_tl:/home/jeremy/.config/deluge
       - /x:/x
@@ -85,7 +76,11 @@ services:
     image: sabnzbd
     container_name: sabnzbd
     restart: unless-stopped
-    network_mode: host
+    network_mode: bridge
+    hostname: sabnzbd
+    privileged: true
+    cap_add:
+      - NET_ADMIN
     environment:
       - PYTHONIOENCODING=utf-8
     volumes:
@@ -100,12 +95,9 @@ services:
         USER: jeremy
     image: jackett
     container_name: jackett_priv
-    networks: 
-      vpnnet:
-        ipv4_address: 192.168.0.84
+    hostname: jackett_priv
+    network_mode: bridge
     restart: unless-stopped
-    depends_on: 
-      - vpn
     environment: 
       - DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
     volumes:
@@ -120,12 +112,9 @@ services:
         USER: jeremy
     image: jackett
     container_name: jackett_pub
-    networks: 
-      vpnnet:
-        ipv4_address: 192.168.0.85
+    hostname: jackett_pub
+    network_mode: bridge
     restart: unless-stopped
-    depends_on: 
-      - vpn
     environment: 
       - DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
     volumes:
@@ -141,24 +130,7 @@ services:
     image: tautulli
     container_name: tautulli
     restart: unless-stopped
-    depends_on: 
-      - vpn
-    networks: 
-      vpnnet:
-        ipv4_address: 192.168.0.86
+    network_mode: bridge    
+    hostname: tautulli
     volumes:
       - /x/.config/tautulli:/config
-
-
-
-networks: 
-  vpnnet:
-    name: vpnnet
-    driver: macvlan
-    driver_opts:
-      parent: eno2    
-    ipam: 
-      config:
-        - subnet: 192.168.0.0/24
-          gateway: 192.168.0.99
-          ip_range: 192.168.0.80/28

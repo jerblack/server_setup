@@ -1,0 +1,17 @@
+#!/usr/bin/bash
+CONTAINER="vpn"
+PID=""
+for (( ; ; ))
+do
+  PID=$(docker inspect --format='{{ .State.Pid }}' ${CONTAINER} 2> /dev/null)
+  if [ $? == 0 ]
+  then
+    echo found docker container ${CONTAINER}
+    break
+  fi
+  echo waiting for docker container ${CONTAINER}
+  sleep 1
+done
+
+
+ip link set eth99 netns "${PID}"

@@ -9,7 +9,8 @@ services:
         USER: jeremy
     image: jackett
     container_name: jackett_priv
-    network_mode: "container:vpn"
+    hostname: jackett_priv
+    network_mode: bridge
     environment: 
       - DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
     volumes:
@@ -24,7 +25,8 @@ services:
         USER: jeremy
     image: jackett
     container_name: jackett_pub
-    network_mode: "container:vpn"
+    hostname: jackett_pub
+    network_mode: bridge
     environment: 
       - DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
     volumes:

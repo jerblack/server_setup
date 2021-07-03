@@ -9,17 +9,10 @@ services:
         USER: jeremy
     image: delugeui
     container_name: delugeui
-    networks: 
-      vpnnet:
-        ipv4_address: 192.168.0.87
-    # network_mode: host
+    network_mode: bridge    
+    hostname: delugeui
     environment: 
       - LIBGL_ALWAYS_INDIRECT=1
     volumes:
       - /x:/x
       - /x/.config/delugeui:/root/.config/deluge
-
-networks: 
-  vpnnet:
-    external: true
-    name: vpnnet

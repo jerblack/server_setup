@@ -7,12 +7,14 @@ services:
       args:
         TZ: US/Pacific
         USER: jeremy
-        SERVER_PORT: 57327
     image: sabnzbd
+    hostname: sabnzbd
     container_name: sabnzbd
     restart: unless-stopped
-    # network_mode: "container:vpn"
     network_mode: bridge
+    privileged: true
+    cap_add:
+      - NET_ADMIN
     environment:
       - PYTHONIOENCODING=utf-8
     volumes:

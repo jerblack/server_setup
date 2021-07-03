@@ -10,6 +10,7 @@ services:
     image: tautulli
     container_name: tautulli
     restart: unless-stopped
-    network_mode: "container:vpn"
+    network_mode: bridge    
+    hostname: tautulli
     volumes:
       - /x/.config/tautulli:/config

@@ -9,25 +9,12 @@ services:
       image: vpn
       container_name: vpn
       hostname: vpn
-      networks: 
-        - vpnnet
+      network_mode: bridge
       cap_add:
         - NET_ADMIN
-      restart: unless-stopped
-      environment: 
-        - CONFIG_FOLDER=/x/.config/vpn 
+      restart: no
+      environment:
+        - CONFIG_FOLDER=/config/vpn
       privileged: true
       volumes:
-        - /x:/x
-
-networks: 
-  vpnnet:
-    name: vpnnet
-    driver: macvlan
-    driver_opts:
-      parent: eno2    
-    ipam: 
-      config:
-        - subnet: 192.168.0.0/24
-          gateway: 192.168.0.99
-          ip_range: 192.168.0.80/28
+        - /docker/config:/config
