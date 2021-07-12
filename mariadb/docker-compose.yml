@@ -1,0 +1,27 @@
+version: '3.9'
+services:
+  db:
+    image: mariadb:latest
+    container_name: db
+    restart: always
+    network_mode: host
+    volumes: 
+      - /x/.config/mariadb/etc:/etc/mysql
+      - /x/.config/mariadb/var:/var/lib/mysql/
+    environment: 
+      - MARIADB_ROOT_PASSWORD_FILE=/run/secrets/db_root_pw
+      - MARIADB_USER_FILE=/run/secrets/db_user
+      - MARIADB_PASSWORD_FILE=/run/secrets/db_pw
+      - MARIADB_DATABASE=db
+    secrets:
+      - db_root_pw
+      - db_user
+      - db_pw
+
+secrets:
+  db_root_pw:
+    file: /x/.config/docker/.secrets/mariadb/db_root_pw
+  db_user:
+    file: /x/.config/docker/.secrets/mariadb/db_user
+  db_pw:
+    file: /x/.config/docker/.secrets/mariadb/db_pw

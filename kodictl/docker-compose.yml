@@ -1,0 +1,17 @@
+version: '3.9'
+services:
+  kodictl:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        TZ: US/Pacific
+        USER: jeremy
+    image: kodictl
+    container_name: kodictl
+    hostname: kodictl
+    restart: unless-stopped
+    network_mode: bridge
+    volumes:
+      - /z:/z
+     

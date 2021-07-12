@@ -3,4 +3,8 @@
 .secrets/etc/wireguard/*conf
 .secrets/*conf
 .secrets/*gz
+.secrets/meriadb
 youtube
+.secrets/mariadb/db_pw
+.secrets/mariadb/db_root_pw
+.secrets/mariadb/db_user
