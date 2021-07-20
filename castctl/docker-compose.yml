@@ -1,0 +1,25 @@
+version: '3.9'
+services:
+  kodictl:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        TZ: US/Pacific
+        USER: jeremy
+    image: castctl
+    container_name: castctl
+    hostname: castctl
+    restart: unless-stopped
+    network_mode: bridge
+    volumes:
+      - /z:/z
+    secrets:
+      - db_user
+      - db_pw
+
+secrets:
+  db_user:
+    file: /x/.config/docker/.secrets/mariadb/db_user
+  db_pw:
+    file: /x/.config/docker/.secrets/mariadb/db_pw
