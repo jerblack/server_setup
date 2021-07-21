@@ -3,7 +3,7 @@ services:
   db:
     image: mariadb:latest
     container_name: db
-    restart: always
+    restart: unless-stopped
     network_mode: host
     volumes: 
       - /x/.config/mariadb/etc:/etc/mysql
