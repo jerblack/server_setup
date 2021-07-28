@@ -6,12 +6,21 @@ do
   PID=$(docker inspect --format='{{ .State.Pid }}' ${CONTAINER} 2> /dev/null)
   if [ $? == 0 ]
   then
-    echo found docker container ${CONTAINER}
+    echo found docker container ${CONTAINER} on pid ${PID}
     break
   fi
   echo waiting for docker container ${CONTAINER}
   sleep 1
 done
 
-
-ip link set eth99 netns "${PID}"
+for (( ; ; ))
+do
+  ip link set eth99 netns "${PID}" 2> /dev/null
+  if [ $? == 0 ]
+  then
+    echo mapped eth99 to container
+    break
+  fi
+  echo failed to map eth99 to container
+  sleep 2
+done
