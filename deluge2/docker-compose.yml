@@ -1,6 +1,6 @@
 version: '3.9'
 services:
-  deluge_pub2:
+  deluge_pub:
     build:
       context: ./
       dockerfile: Dockerfile
@@ -14,7 +14,8 @@ services:
     hostname: deluge_pub
     volumes:
       - /x/.config/deluge_pub:/home/jeremy/.config/deluge
-      - /x:/x
+      - /x/.config/deluge_pub:/deluge
+      - /x/.config/_recycle:/torrent_files
   deluge_ipt:
     build:
       context: ./
@@ -29,7 +30,8 @@ services:
     hostname: deluge_ipt
     volumes:
       - /x/.config/deluge_ipt:/home/jeremy/.config/deluge
-      - /x:/x
+      - /x/.config/deluge_ipt:/deluge
+      - /x/.config/_recycle:/torrent_files
       - /z/.seeds:/seeds
   deluge_tl:
     build:
@@ -39,9 +41,11 @@ services:
         TZ: US/Pacific
         USER: jeremy
     image: deluge2 
+    container_name: deluge_tl
     network_mode: bridge    
     hostname: deluge_tl
     restart: unless-stopped
     volumes:
       - /x/.config/deluge_tl:/home/jeremy/.config/deluge
-      - /x:/x
+      - /x/.config/deluge_tl:/deluge
+      - /x/.config/_recycle:/torrent_files
