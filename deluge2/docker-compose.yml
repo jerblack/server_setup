@@ -49,3 +49,4 @@ services:
       - /x/.config/deluge_tl:/home/jeremy/.config/deluge
       - /x/.config/deluge_tl:/deluge
       - /x/.config/_recycle:/torrent_files
+      - /z/.seeds:/seeds
