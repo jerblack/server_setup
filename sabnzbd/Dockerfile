@@ -12,8 +12,8 @@ RUN apk add --update libffi-dev libressl-dev git automake make bash autoconf alp
 FROM golang:alpine as build
 ENV GOPROXY=direct
 RUN apk add --no-cache git && \
-    go get github.com/jerblack/server_tools/mux && \
-    go get github.com/jerblack/server_tools/extract 
+    go install github.com/jerblack/server_tools/mux@latest && \
+    go install github.com/jerblack/server_tools/extract@latest 
     
 FROM alpine
 ARG TZ
@@ -39,7 +39,7 @@ RUN  apk upgrade --update && \
     ln -sf /usr/bin/par2 /usr/bin/par2create && \
     ln -sf /usr/bin/par2 /usr/bin/par2verify && \
     ln -sf /usr/bin/par2 /usr/bin/par2repair && \
-    setcap CAP_NET_BIND_SERVICE=+eip /usr/bin/python3.8 && \
+    setcap CAP_NET_BIND_SERVICE=+eip /usr/bin/python3.9 && \
     touch /sabnzbd.sh && chmod +x /sabnzbd.sh && \
     printf '#!/bin/sh\n' > /sabnzbd.sh && \
     printf 'sudo ip route del default\n' >> /sabnzbd.sh && \

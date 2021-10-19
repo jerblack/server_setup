@@ -3,7 +3,7 @@
 FROM golang:alpine as build
 ENV GOPROXY=direct
 RUN apk add --no-cache git curl jq alpine-sdk unzip && \
-    go get github.com/jerblack/server_tools/yt && \
+    go install github.com/jerblack/server_tools/yt@latest && \
     YTDL=$(curl -s https://api.github.com/repos/ytdl-org/youtube-dl/releases/latest | jq -r '.assets[] | select(.name=="youtube-dl").browser_download_url') && \
     curl -Lo bin/youtube-dl $YTDL && \
     chmod +x bin/youtube-dl && \

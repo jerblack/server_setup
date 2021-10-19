@@ -36,6 +36,7 @@ services:
       - /x/.config/deluge_pub:/home/jeremy/.config/deluge
       - /x/.config/deluge_pub:/deluge
       - /x/.config/_recycle:/torrent_files
+      - /z/.seeds:/seeds
   deluge_ipt:
     build:
       context: ./deluge2/
@@ -124,17 +125,17 @@ services:
     volumes:
       - /x:/x
       - /x/.config/jackett_pub:/home/jeremy/.config
-  tautulli:
-    build:
-      context: ./tautulli/
-      dockerfile: Dockerfile
-      args:
-        TZ: US/Pacific
-        USER: jeremy
-    image: tautulli
-    container_name: tautulli
-    restart: unless-stopped
-    network_mode: bridge    
-    hostname: tautulli
-    volumes:
-      - /x/.config/tautulli:/config
+  # tautulli:
+  #   build:
+  #     context: ./tautulli/
+  #     dockerfile: Dockerfile
+  #     args:
+  #       TZ: US/Pacific
+  #       USER: jeremy
+  #   image: tautulli
+  #   container_name: tautulli
+  #   restart: unless-stopped
+  #   network_mode: bridge    
+  #   hostname: tautulli
+  #   volumes:
+  #     - /x/.config/tautulli:/config
