@@ -36,7 +36,7 @@ services:
       - /x/.config/deluge_pub:/home/jeremy/.config/deluge
       - /x/.config/deluge_pub:/deluge
       - /x/.config/_recycle:/torrent_files
-      - /z/.seeds:/seeds
+      - /mnt/zhdd/.seeds:/seeds
   deluge_ipt:
     build:
       context: ./deluge2/
@@ -53,7 +53,7 @@ services:
       - /x/.config/deluge_ipt:/home/jeremy/.config/deluge
       - /x/.config/deluge_ipt:/deluge
       - /x/.config/_recycle:/torrent_files
-      - /z/.seeds:/seeds
+      - /mnt/zhdd/.seeds:/seeds
   deluge_tl:
     build:
       context: ./deluge2/
@@ -70,7 +70,7 @@ services:
       - /x/.config/deluge_tl:/home/jeremy/.config/deluge
       - /x/.config/deluge_tl:/deluge
       - /x/.config/_recycle:/torrent_files
-      - /z/.seeds:/seeds
+      - /mnt/zhdd/.seeds:/seeds
   sabnzbd:
     build:
       context: ./sabnzbd/
